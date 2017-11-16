@@ -4,6 +4,25 @@ services:
     build:
       context: ./docker
     ports:
-      - "8443:443"
+      - 8443:443
     volumes:
       - ./client:/usr/share/nginx/html
+  plugin:
+    build:
+      context: ./plugin/docker
+    ports:
+      - 8089:8089
+    volumes:
+      - ./plugin:/opt/sandbox/janus-echotest-rs
+      - cargo:/root/.cargo
+    command:
+      - /bin/bash
+      - -c
+      - |
+          source ~/.profile
+          cd /opt/sandbox/janus-echotest-rs
+          cargo build
+          ln -sf /opt/sandbox/janus-echotest-rs/target/debug/libjanus_echotest.so /opt/janus/lib/janus/plugins/libjanus_echotest.so
+          /opt/janus/bin/janus
+volumes:
+  cargo:

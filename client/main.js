@@ -140,7 +140,7 @@ function gotRemoteStream(event) {
   console.log('gotRemoteStream');
 
   remoteStream = event.stream;
-  remoteVideo.src = window.URL.createObjectURL(remoteStream);
+  attachMediaStream(remoteVideo, remoteStream);
 }
 
 function gotLocalDescription(desc) {
@@ -178,7 +178,7 @@ function onSignalingError(error){
 
 function successCallback(gotStream) {
   localStream = gotStream;
-  localVideo.src = window.URL.createObjectURL(localStream);
+  attachMediaStream(localVideo, localStream);
 }
 
 function errorCallback(error) {
@@ -187,4 +187,16 @@ function errorCallback(error) {
 
 function getTransactionId() {
   return Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);
+}
+
+function attachMediaStream(element, stream) {
+  if (typeof element.srcObject !== 'undefined') {
+    element.srcObject = stream;
+  } else if (typeof element.mozSrcObject !== 'undefined') {
+    element.mozSrcObject = stream;
+  } else if (typeof element.src !== 'undefined') {
+    element.src = URL.createObjectURL(stream);
+  } else {
+    console.log('Error attaching stream to element.');
+  }
 }

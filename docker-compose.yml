@@ -12,6 +12,7 @@ services:
       context: ./plugin/docker
     ports:
       - 8089:8089
+      - 8989:8989
     volumes:
       - ./plugin:/opt/sandbox/janus-echotest-rs
       - cargo:/root/.cargo
